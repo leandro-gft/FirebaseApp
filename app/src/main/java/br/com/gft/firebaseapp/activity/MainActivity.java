@@ -17,17 +17,32 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.gft.firebaseapp.R;
+import br.com.gft.firebaseapp.model.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
 
-//    private DatabaseReference referencia = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference referencia = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth usuario = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Gera identificador unico
+//        DatabaseReference usuarios = referencia.child("usuarios").push();
+//        Usuario u1 = new Usuario("Ana","Paula",10);
+//        Usuario u2 = new Usuario("Beatriz","Santos",20);
+//        Usuario u3 = new Usuario("Carlos","Silva",30);
+//        Usuario u4 = new Usuario("Daniel","Oliveira",40);
+//        Usuario u5 = new Usuario("Eduardo","Matos",50);
+//        Usuario u6 = new Usuario("Felipe","Lima",60);
+//        Usuario u7 = new Usuario("Gabriela","Azevedo",70);
+//
+//        usuarios.setValue(u7);
+
+
 
         //Salvando e atualizando dados
 //        referencia.child("usuarios").child("003").child("nome").setValue("Claudia");
@@ -90,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
 //        });
 
         //Verifica usuario logado
-        if (usuario.getCurrentUser() != null){
-            Log.i("CurrentUser", "Usuario logado");
-        } else {
-            Log.i("CurrentUser", "Usuario não logado");
-        }
+//        if (usuario.getCurrentUser() != null){
+//            Log.i("CurrentUser", "Usuario logado");
+//        } else {
+//            Log.i("CurrentUser", "Usuario não logado");
+//        }
 
     }
 }

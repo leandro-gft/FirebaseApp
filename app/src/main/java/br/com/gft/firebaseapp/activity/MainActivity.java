@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,7 +23,8 @@ import br.com.gft.firebaseapp.model.Usuario;
 public class MainActivity extends AppCompatActivity {
 
 
-    private DatabaseReference referencia = FirebaseDatabase.getInstance().getReference();
+//    private DatabaseReference referencia = FirebaseDatabase.getInstance().getReference();
+    private FirebaseAuth usuario = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +48,37 @@ public class MainActivity extends AppCompatActivity {
 //        produtos.child("003").setValue(produto);
 
         //Recuperando dados
-        DatabaseReference usuarios = referencia.child("usuarios").child("001");
-        usuarios.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("FIREBASE", dataSnapshot.getValue().toString());
-            }
+    //        DatabaseReference usuarios = referencia.child("usuarios").child("001");
+    //        usuarios.addValueEventListener(new ValueEventListener() {
+    //            @Override
+    //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    //                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+    //            }
+    //
+    //            @Override
+    //            public void onCancelled(@NonNull DatabaseError databaseError) {
+    //
+    //            }
+    //        });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        //Cadastro de usuarios
+//        usuario.createUserWithEmailAndPassword("lpsacchi@gmail.com", "123456").
+//                addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()){
+//                            Log.i("CreateUser", "Sucesso ao cadastrar usuario");
+//                        }else{
+//                            Log.i("CreateUser", "Erro ao cadastrar usuario");
+//                        }
+//                    }
+//                });
 
-            }
-        });
-
-
-
+        //Verifica usuario logado
+        if (usuario.getCurrentUser() != null){
+            Log.i("CreateUser", "Usuario logado");
+        } else {
+            Log.i("CreateUser", "Usuario não logado");
+        }
     }
 }

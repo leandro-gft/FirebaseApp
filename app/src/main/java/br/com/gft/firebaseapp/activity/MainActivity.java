@@ -3,10 +3,18 @@ package br.com.gft.firebaseapp.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.util.UUID;
 
 import br.com.gft.firebaseapp.R;
 import br.com.gft.firebaseapp.model.Usuario;
@@ -26,13 +40,62 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference referencia = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth usuario = FirebaseAuth.getInstance();
 
+    private Button botaoImagem;
+    private ImageView imagem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        botaoImagem = findViewById(R.id.button);
+        imagem = findViewById(R.id.imageView);
+
+        botaoImagem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Configura iamgem para ser salva na memoria
+                imagem.setDrawingCacheEnabled(true);
+                imagem.buildDrawingCache();
+
+                //Recupera bitmap da imagem(image a ser carregada)
+                Bitmap bitmap = imagem.getDrawingCache();
+
+                //Comprime bitmap para formato png/jpeg
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG,75, baos);
+
+                //Converte o baos para pixel brutos em uma matriz de bytes
+                // (dados da imagem)
+                byte[] dadosImagem = baos.toByteArray();
+
+                //Define nós para o storage
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference imagens = storageReference.child("imagens");
+
+                //Nome imagem
+                String nomeImagem = UUID.randomUUID().toString();
+                StorageReference imagemRef = imagens.child(nomeImagem+".jpeg");
+
+                //Retorna objeto que irá controlar o upload
+                UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
+                uploadTask.addOnFailureListener(MainActivity.this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this,"Upload da imagem falhou: "+e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(MainActivity.this,"Upload realizado realizado com sucesso", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
+
         //Utilização de filtros
-        DatabaseReference usuarios = referencia.child("usuarios");
+//        DatabaseReference usuarios = referencia.child("usuarios");
 
         //pelo id
 //        DatabaseReference usuarioPesquisa = usuarios.child("-M90G8K5pcizRP8bsqYh");
@@ -48,24 +111,24 @@ public class MainActivity extends AppCompatActivity {
 //        Query usuarioPesquisa = usuarios.orderByChild("idade").startAt(20).endAt(50);
 
         //filtrar palavras
-        Query usuarioPesquisa = usuarios.orderByChild("nome").startAt("A").endAt("A"+"\uf8ff");
-
-
-        usuarioPesquisa.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("Dados usuario", dataSnapshot.getValue().toString());
-
-//                Usuario dadosUsuario = dataSnapshot.getValue(Usuario.class);
-//                Log.i("Dados usuario", "nome: " +dadosUsuario.getNome()+
-//                        " idade: "+ dadosUsuario.getIdade());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        Query usuarioPesquisa = usuarios.orderByChild("nome").startAt("A").endAt("A"+"\uf8ff");
+//
+//
+//        usuarioPesquisa.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                Log.i("Dados usuario", dataSnapshot.getValue().toString());
+//
+////                Usuario dadosUsuario = dataSnapshot.getValue(Usuario.class);
+////                Log.i("Dados usuario", "nome: " +dadosUsuario.getNome()+
+////                        " idade: "+ dadosUsuario.getIdade());
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         //Gera identificador unico
 //        DatabaseReference usuarios = referencia.child("usuarios").push();

@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.gft.firebaseapp.R;
@@ -29,6 +30,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Utilização de filtros
+        DatabaseReference usuarios = referencia.child("usuarios");
+
+        //pelo id
+//        DatabaseReference usuarioPesquisa = usuarios.child("-M90G8K5pcizRP8bsqYh");
+
+        //pelo nome
+//        Query usuarioPesquisa = usuarios.orderByChild("nome").equalTo("Ana");
+
+        //filtrar primeiros ou os ultimos
+//        Query usuarioPesquisa = usuarios.orderByKey().limitToFirst(2);
+//        Query usuarioPesquisa = usuarios.orderByKey().limitToLast(3);
+
+        //entre dois valores
+//        Query usuarioPesquisa = usuarios.orderByChild("idade").startAt(20).endAt(50);
+
+        //filtrar palavras
+        Query usuarioPesquisa = usuarios.orderByChild("nome").startAt("A").endAt("A"+"\uf8ff");
+
+
+        usuarioPesquisa.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("Dados usuario", dataSnapshot.getValue().toString());
+
+//                Usuario dadosUsuario = dataSnapshot.getValue(Usuario.class);
+//                Log.i("Dados usuario", "nome: " +dadosUsuario.getNome()+
+//                        " idade: "+ dadosUsuario.getIdade());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         //Gera identificador unico
 //        DatabaseReference usuarios = referencia.child("usuarios").push();

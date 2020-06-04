@@ -17,8 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.gft.firebaseapp.R;
-import br.com.gft.firebaseapp.model.Produto;
-import br.com.gft.firebaseapp.model.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,11 +72,29 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
 
+
+        //Desloga o usuario
+//        usuario.signOut();
+
+        //Loga o usuario
+//        usuario.signInWithEmailAndPassword("lpsacchi@gmail.com", "123456").
+//                addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                if (task.isSuccessful()){
+//                    Log.i("signIn", "Usuario logado com sucesso");
+//                } else {
+//                    Log.i("signIn", "Erro ao logar o usuário");
+//                }
+//            }
+//        });
+
         //Verifica usuario logado
         if (usuario.getCurrentUser() != null){
-            Log.i("CreateUser", "Usuario logado");
+            Log.i("CurrentUser", "Usuario logado");
         } else {
-            Log.i("CreateUser", "Usuario não logado");
+            Log.i("CurrentUser", "Usuario não logado");
         }
+
     }
 }

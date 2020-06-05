@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -74,20 +75,23 @@ public class MainActivity extends AppCompatActivity {
                 //Define nós para o storage
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                 StorageReference imagens = storageReference.child("imagens");
-                StorageReference imagemRef = imagens.child("1b4c6144-aca0-4e96-a874-642bc7462fbc.jpeg");
+                StorageReference imagemRef = imagens.child("e2b779fd-2680-43e3-a9cc-43b6f466866b.jpeg");
+
+                //Baixando imagem
+                Glide.with(MainActivity.this).load(imagemRef).into(imagem);
 
                 //Deletando imagem
-                imagemRef.delete().addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Erro ao deletar imagem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(MainActivity.this, "Imagem deletada com sucesso", Toast.LENGTH_LONG).show();
-                    }
-                });
+//                imagemRef.delete().addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MainActivity.this, "Erro ao deletar imagem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Toast.makeText(MainActivity.this, "Imagem deletada com sucesso", Toast.LENGTH_LONG).show();
+//                    }
+//                });
 
 
 //                //Nome imagem

@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         botaoImagem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 //Configura iamgem para ser salva na memoria
                 imagem.setDrawingCacheEnabled(true);
                 imagem.buildDrawingCache();
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //Comprime bitmap para formato png/jpeg
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG,75, baos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
 
                 //Converte o baos para pixel brutos em uma matriz de bytes
                 // (dados da imagem)
@@ -72,24 +74,39 @@ public class MainActivity extends AppCompatActivity {
                 //Define nós para o storage
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                 StorageReference imagens = storageReference.child("imagens");
+                StorageReference imagemRef = imagens.child("1b4c6144-aca0-4e96-a874-642bc7462fbc.jpeg");
 
-                //Nome imagem
-                String nomeImagem = UUID.randomUUID().toString();
-                StorageReference imagemRef = imagens.child(nomeImagem+".jpeg");
-
-                //Retorna objeto que irá controlar o upload
-                UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
-                uploadTask.addOnFailureListener(MainActivity.this, new OnFailureListener() {
+                //Deletando imagem
+                imagemRef.delete().addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this,"Upload da imagem falhou: "+e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Erro ao deletar imagem: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                }).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(MainActivity.this,"Upload realizado realizado com sucesso", Toast.LENGTH_LONG).show();
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(MainActivity.this, "Imagem deletada com sucesso", Toast.LENGTH_LONG).show();
                     }
                 });
+
+
+//                //Nome imagem
+//                String nomeImagem = UUID.randomUUID().toString();
+//                StorageReference imagemRef = imagens.child(nomeImagem+".jpeg");
+//
+//                //Retorna objeto que irá controlar o upload
+//                UploadTask uploadTask = imagemRef.putBytes(dadosImagem);
+//                uploadTask.addOnFailureListener(MainActivity.this, new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MainActivity.this,"Upload da imagem falhou: "+e.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//                }).addOnSuccessListener(MainActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Toast.makeText(MainActivity.this,"Upload realizado realizado com sucesso", Toast.LENGTH_LONG).show();
+//                    }
+//                });
             }
         });
 
@@ -143,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
 //        usuarios.setValue(u7);
 
 
-
         //Salvando e atualizando dados
 //        referencia.child("usuarios").child("003").child("nome").setValue("Claudia");
 //        referencia.child("usuarios").child("003").child("sobrenome").setValue("Sacchi");
@@ -161,18 +177,18 @@ public class MainActivity extends AppCompatActivity {
 //        produtos.child("003").setValue(produto);
 
         //Recuperando dados
-    //        DatabaseReference usuarios = referencia.child("usuarios").child("001");
-    //        usuarios.addValueEventListener(new ValueEventListener() {
-    //            @Override
-    //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-    //                Log.i("FIREBASE", dataSnapshot.getValue().toString());
-    //            }
-    //
-    //            @Override
-    //            public void onCancelled(@NonNull DatabaseError databaseError) {
-    //
-    //            }
-    //        });
+        //        DatabaseReference usuarios = referencia.child("usuarios").child("001");
+        //        usuarios.addValueEventListener(new ValueEventListener() {
+        //            @Override
+        //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        //                Log.i("FIREBASE", dataSnapshot.getValue().toString());
+        //            }
+        //
+        //            @Override
+        //            public void onCancelled(@NonNull DatabaseError databaseError) {
+        //
+        //            }
+        //        });
 
         //Cadastro de usuarios
 //        usuario.createUserWithEmailAndPassword("lpsacchi@gmail.com", "123456").
